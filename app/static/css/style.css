@@ -1,0 +1,282 @@
+:root {
+    --primary-color: #2c5282;  /* 更深的蓝色 */
+    --accent-color: #4299e1;   /* 明亮的蓝色 */
+    --hover-color: #3182ce;    /* 悬停蓝色 */
+    --bg-color: #f7fafc;       /* 更柔和的背景色 */
+    --border-radius: 10px;     /* 增加圆角 */
+    --box-shadow: 0 4px 6px rgba(0,0,0,0.07);  /* 更柔和的阴影 */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+}
+
+.container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.content-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.left-nav {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 15px;
+    height: fit-content;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.right-content {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 25px;
+    min-height: calc(100vh - 200px);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.header h1 {
+    margin: 0;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+}
+
+.search-container input {
+    padding: 10px 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.9);
+    transition: all 0.3s ease;
+    width: 300px;
+}
+
+.search-container input:focus {
+    border-color: white;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+}
+
+.search-container button,
+.settings-btn {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+.search-container button:hover,
+.settings-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+.nav-bar {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 10px;
+    padding: 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.nav-bar a {
+    text-align: center;
+    padding: 8px 5px;
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nav-bar a:hover {
+    background: var(--bg-color);
+    transform: translateY(-1px);
+}
+
+.nav-bar a.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.heading2-container h3 {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    border-left: 3px solid var(--accent-color);
+    background: white;
+    border-radius: var(--border-radius);
+    margin: 8px 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.heading2-container h3:hover {
+    background-color: #f8f9fa;
+}
+
+.heading2-container h3.active {
+    background-color: #f0f0f0;
+}
+
+.text-content {
+    padding: 20px;
+    line-height: 1.8;
+    user-select: text;
+}
+
+.text-content p {
+    margin-bottom: 15px;
+    cursor: text;
+}
+
+.content-section {
+    user-select: text;
+}
+
+.selectable-text {
+    cursor: text;
+    user-select: text;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: background-color 0.2s;
+}
+
+.selectable-text:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.selection-modal {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 360px;
+    max-height: 80vh;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.selection-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.selection-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.selection-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.export-btn,
+.clear-selections {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.export-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.clear-selections {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.selection-list {
+    padding: 0 15px 15px 15px;
+    max-height: calc(80vh - 60px);
+    overflow-y: auto;
+}
+
+.selection-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
+}
+
+.selection-list th,
+.selection-list td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+}
+
+.footer {
+    text-align: center;
+    padding: 25px;
+    color: #666;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-top: 40px;
+    font-size: 0.9rem;
+}
+
+.footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+} 
