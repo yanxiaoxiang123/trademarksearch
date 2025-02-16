@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 商标分类查询系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li class="active" onclick="showSection('profile')">个人信息</li>
+                <li onclick="showSection('password')">修改密码</li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <div id="profile" class="section">
+                <h2>个人信息</h2>
+                <div id="profileAlertMessage" class="alert"></div>
+                <div class="profile-card">
+                    <form id="profileForm">
+                        <div class="info-item">
+                            <label for="customerName">客户名称</label>
+                            <input type="text" id="customerName" value="{{ user_info.customer_name }}">
+                        </div>
+                        <div class="info-item">
+                            <label for="username">账户</label>
+                            <input type="text" id="username" value="{{ user_info.username }}" disabled>
+                        </div>
+                        <div class="info-item">
+                            <label for="phoneNumber">手机号码</label>
+                            <input type="text" id="phoneNumber" value="{{ user_info.phone_number }}">
+                        </div>
+                        <div class="info-item">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" value="{{ user_info.email }}">
+                        </div>
+                        <button type="submit" class="submit-btn">保存更改</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="password" class="section" style="display: none;">
+                <h2>修改密码</h2>
+                <div id="alertMessage" class="alert"></div>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="old_password">旧密码</label>
+                        <input type="password" id="old_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">新密码</label>
+                        <input type="password" id="new_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">确认新密码</label>
+                        <input type="password" id="confirm_password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">确认修改</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+</body>
+</html>

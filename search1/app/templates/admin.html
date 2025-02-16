@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>管理员面板 - 商标分类查询系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('users')">用户管理</button>
+            <button class="nav-tab" onclick="showTab('exports')">导出记录</button>
+        </div>
+
+        <!-- 用户管理标签内容 -->
+        <div id="usersTab" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="搜索用户...">
+                    <button class="search-button" onclick="searchUsers()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <button class="add-user-button" onclick="openAddUserModal()">
+                    <i class="fas fa-plus"></i> 添加用户
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>客户名称</th>
+                        <th>用户名</th>
+                        <th>手机号</th>
+                        <th>邮箱</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.customer_name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.phone_number }}</td>
+                        <td>{{ user.email or '未设置' }}</td>
+                        <td>{{ user.remarks or '无' }}</td>
+                        <td class="action-buttons">
+                            <button class="edit-button" onclick="openEditUserModal('{{ user.UID }}')">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <form class="inline-form" action="{{ url_for('admin.delete_user', user_id=user.UID) }}" method="POST" 
+                                  onsubmit="return confirm('确定要删除该用户吗？');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="delete-button">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 导出记录标签内容 -->
+        <div id="exportsTab" class="tab-content" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>客户名称</th>
+                        <th>用户名</th>
+                        <th>导出时间</th>
+                        <th>导出数量</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record, customer_name, username in export_records %}
+                    <tr>
+                        <td>{{ customer_name }}</td>
+                        <td>{{ username }}</td>
+                        <td>{{ record.export_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ record.total_items }}</td>
+                        <td>
+                            <button class="edit-button" onclick="viewExportDetails('{{ record.id }}')">
+                                <i class="fas fa-eye"></i> 查看详情
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 编辑用户模态框 -->
+        <div id="editUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>编辑用户</h2>
+                <form id="editUserForm" method="POST" action="{{ url_for('admin.edit_user') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" id="edit_user_id" name="user_id">
+                    <div class="form-group">
+                        <label for="edit_customer_name">客户名称</label>
+                        <input type="text" id="edit_customer_name" name="customer_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_username">用户名</label>
+                        <input type="text" id="edit_username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_phone_number">手机号</label>
+                        <input type="text" id="edit_phone_number" name="phone_number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_email">邮箱</label>
+                        <input type="email" id="edit_email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_password">密码</label>
+                        <input type="password" id="edit_password" name="password" placeholder="不修改请留空">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_remarks">备注</label>
+                        <textarea id="edit_remarks" name="remarks"></textarea>
+                    </div>
+                    <button type="submit">保存修改</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 添加用户模态框 -->
+        <div id="addUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>添加用户</h2>
+                <form action="{{ url_for('admin.add_user') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-group">
+                        <label for="customer_name">客户名称</label>
+                        <input type="text" id="customer_name" name="customer_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">手机号</label>
+                        <input type="text" id="phone_number" name="phone_number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" name="password" required>
+                        <div class="show-password-container">
+                            <input type="checkbox" id="show-password">
+                            <label for="show-password">显示密码</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">备注</label>
+                        <textarea id="remarks" name="remarks"></textarea>
+                    </div>
+                    <button type="submit">添加用户</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 导出详情模态框 -->
+        <div id="exportDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeExportDetailsModal()">&times;</span>
+                <h2>导出详情</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>类别</th>
+                            <th>组号</th>
+                            <th>编码</th>
+                            <th>商品名称</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exportDetailsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="logout-link">
+        <a href="{{ url_for('auth.admin_logout') }}">
+            <i class="fas fa-sign-out-alt"></i> 退出登录
+        </a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

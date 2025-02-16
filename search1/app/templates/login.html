@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 商标分类查询系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>欢迎登录</h2>
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+        <form action="{{ url_for('auth.login') }}" method="POST">
+            <div class="form-group">
+                <label for="login_field">账号</label>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" 
+                           id="login_field" 
+                           name="login_field" 
+                           required 
+                           placeholder="请输入用户名、手机号或邮箱"
+                           autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           required 
+                           placeholder="请输入密码">
+                </div>
+            </div>
+            <button type="submit">登 录</button>
+        </form>
+    </div>
+</body>
+</html>
